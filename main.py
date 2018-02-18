@@ -28,5 +28,13 @@ def displayImg(filename):
 
     subprocess.run("sudo fbi -d /dev/fb0 -a -T 1 " + filename, shell=True)
 
+def textToSpeech():
+    url = 'https://stream.watsonplatform.net/text-to-speech/api'
+    username = '5cc5826f-36d2-480e-854f-00897a72e4ac'
+    password = 'lMrLyiF0o1bW'
+
+    command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"hello world\\\"}\"" + " --output hello_world.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
+    subprocess.run(command, shell=True)
+
 
 displayImg("test.jpg")
