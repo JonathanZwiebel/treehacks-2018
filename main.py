@@ -3,7 +3,8 @@ from pymongo import MongoClient
 from urllib import request
 import interaction_engine
 import time
-import GPIO
+import random
+import RPi.GPIO as GPIO
 
 
 def record(filename):
@@ -15,6 +16,9 @@ def play(filename):
     play_cmd = "aplay " + filename
     subprocess.run(play_cmd, shell=True)
 
+def find_random_comic(comic_image_list):
+    index = random.randint(0, len(comic_image_list))
+    return comic_image_list[index]
 
 def displayImg(filename):
     MONGOLAB_URI = "mongodb://treehax:Soyboy100!@ds225028.mlab.com:25028/comic-images"
@@ -70,8 +74,9 @@ def main():
     engine.start()
     status = "TTS_START"
     last_result = "Nine One One Operator. What is your emergency?"
-    print('hello world')
-    textToSpeech("Hey Iris")
+
+    toHeadphones = "amixer cset numid=3 1"
+    subprocess.run(toHeadphones, shell=True)
 
     while True:
         print(status)
@@ -91,7 +96,7 @@ def main():
             textToSpeech(last_result)
             status = "TTS_ACTIVE"
         elif status == "TTS_ACTIVE":
-            if time.time() - tts_begin_time > 1:
+            if time.time() - tts_begin_time > 6:
                 status = "PLAY_START"
         elif status == "PLAY_START":
             play_begin_time = time.time()
@@ -102,3 +107,5 @@ def main():
                 status = "LISTEN_START"
 
         time.sleep(0.1)
+
+main()

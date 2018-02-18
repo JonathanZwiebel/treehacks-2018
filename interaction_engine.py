@@ -62,9 +62,12 @@ class InteractionEngine():
         self.output_ready = False
 
         output = self.houndify.api_call(filepath, self.active_pages)
+        print(output)
         if output[0]:
+            print("Success Domain Case")
             self.output_ready = True
             return output[2]
         else:
+            print("Fail Domain Case")
             self.output_ready = True
             return "Please speak clearly so I can understand you. " + KEY_PHRASES[self.scene]
