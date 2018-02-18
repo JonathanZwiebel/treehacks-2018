@@ -8,36 +8,9 @@ import houndify_interface
 
 FREQ = 16000
 
-"""
-SCENES
-********************
-_INIT:
- True
-    Output: "911 What is your emergency?"
-    Change scene to SCENE_START
-
-SCENE_START:
- Input - Notify operator that there is a fire
-    Output: "Are you clear of the fire and out of danger?"
-    Change scene to SCENE_DANGER_CHECK
- Input - Panic
-    Output: "Calm down and make sure to explain the situation to me so I can help you. What is your emergency?"
- Input failure
-    Output: "Make sure to speak slowly and clearly. What is your emergency?"
-
-SCENE_DANGER_CHECK:
- Input - Notify operator that they are in danger
-    Output: "Hang up the phone and get away of the fire immediately."
-    Chance scene to END
- Input - Notify operator that they are not in danger
-    Output: "What is the location of the fire"
-    Change scene to LOCATION
- Input failure
-    Output: "Make sure to speak slowly and clearly. Are you clear of the fire and out of danger?"
-
-"""
-
-KEY_PHRASES = {"SCENE_START": "What is your emergency?"}
+KEY_PHRASES = {"SCENE_FIRE_START": "What is your emergency?", "SCENE_WATER_START": "What is your emergency?",
+               "SCENE_VIOLENCE_START": "What is your emergency?", "SCENE_INJURY_START": "What is your emergency?", "SCENE_FIRE_CLEAR": "Are you away from the fire?",
+               "SCENE_NAME": "What is your name?"}
 
 START_TEXT = "Nine One One Operator. What is your emergency?"
 
@@ -51,12 +24,26 @@ class InteractionEngine():
         self.output_ready = None
         self.active_pages = None
 
+    def load_image(self, image):
+        self.image_type = image["type"]
+        self.image_tags = image["tags"]
+
     def start(self):
         self.houndify.initialize()
-        self.scene = "SCENE_START"
         self.output_ready = True
         self.output_text = START_TEXT
-        self.active_pages = ["SCENE_START"]
+        if self.image_type == 1:
+            self.active_pages = ["SCENE_FIRE_START"]
+            self.scene = "SCENE_FIRE_START"
+        if self.image_type == 2:
+            self.active_pages = ["SCENE_VIOLENCE_START"]
+            self.scene = "SCENE_VIOLENCE_START"
+        if self.image_type == 3:
+            self.active_pages = ["SCENE_WATER_START"]
+            self.scene = "SCENE_WATER_START"
+        if self.image_type == 4:
+            self.active_pages = ["SCENE_INJURY_START"]
+            self.scene = "SCENE_INJURY_START"
 
     def interact(self, filepath):
         self.output_ready = False
@@ -64,10 +51,12 @@ class InteractionEngine():
         output = self.houndify.api_call(filepath, self.active_pages)
         print(output)
         if output[0]:
-            print("Success Domain Case")
             self.output_ready = True
+            if output[3]["identified"]:
+                self.next_scene = output[3]["next_scene"]
+                self.active_pages = [output[3]["next_scene"]]
+                print(self.next_scene)
             return output[2]
         else:
-            print("Fail Domain Case")
             self.output_ready = True
             return "Please speak clearly so I can understand you. " + KEY_PHRASES[self.scene]

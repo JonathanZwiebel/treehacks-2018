@@ -16,9 +16,11 @@ def play(filename):
     play_cmd = "aplay " + filename
     subprocess.run(play_cmd, shell=True)
 
+
 def find_random_comic(comic_image_list):
     index = random.randint(0, len(comic_image_list))
     return comic_image_list[index]
+
 
 def displayImg(filename):
     MONGOLAB_URI = "mongodb://treehax:Soyboy100!@ds225028.mlab.com:25028/comic-images"
@@ -29,10 +31,12 @@ def displayImg(filename):
 
     # Creates file called 'filename'
     f = open(filename, 'wb')
-    f.write(request.urlopen(image_list[0]['url'].format("Raspberry Pi")).read())
+    random_img = find_random_comic(image_list)
+    f.write(request.urlopen(random_img['url'].format("Raspberry Pi")).read())
     f.close()
 
     subprocess.run("sudo fbi -d /dev/fb0 -a -T 1 " + filename, shell=True)
+    return random_img
 
 
 def textToSpeech(text):
@@ -81,6 +85,10 @@ def main():
     while True:
         print(status)
 
+        if status == "LOAD_IMAGE":
+            image = displayImg("image.jpeg")
+            engine.load_image(image)
+            status = "LISTEN_START"
         if status == "LISTEN_START":
             listen_begin_time = time.time()
             record("recording.wav")
@@ -107,5 +115,6 @@ def main():
                 status = "LISTEN_START"
 
         time.sleep(0.1)
+
 
 main()
