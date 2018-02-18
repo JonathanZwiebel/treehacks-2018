@@ -5,6 +5,12 @@ import requests
 from io import BytesIO
 from urllib import request
 
+def main():
+    print('hello world')
+
+if __name__ == "__main__":
+    main()
+
 
 def record(filename):
     record_cmd = "arecord -D plughw:1 --duration=10 -f S16_LE -r16 -vv " + filename
@@ -28,13 +34,13 @@ def displayImg(filename):
 
     subprocess.run("sudo fbi -d /dev/fb0 -a -T 1 " + filename, shell=True)
 
-def textToSpeech():
+def textToSpeech(text):
     url = 'https://stream.watsonplatform.net/text-to-speech/api'
     username = '5cc5826f-36d2-480e-854f-00897a72e4ac'
     password = 'lMrLyiF0o1bW'
 
-    command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"hello world\\\"}\"" + " --output hello_world.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
+    command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"" + text + "\\\"}\"" + " --output hello_world.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
     subprocess.run(command, shell=True)
 
 
-displayImg("test.jpg")
+#displayImg("test.jpg")
