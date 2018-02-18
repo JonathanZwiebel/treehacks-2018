@@ -76,7 +76,7 @@ def button():
 def main():
     engine = interaction_engine.InteractionEngine()
     engine.start()
-    status = "TTS_START"
+    status = "LOAD_IMAGE"
     last_result = "Nine One One Operator. What is your emergency?"
 
     toHeadphones = "amixer cset numid=3 1"
