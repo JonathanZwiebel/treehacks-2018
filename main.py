@@ -4,13 +4,14 @@ from bson.objectid import ObjectId
 import requests
 from io import BytesIO
 from urllib import request
+import RPi.GPIO as GPIO
+import time
 
 def main():
     print('hello world')
 
 if __name__ == "__main__":
     main()
-
 
 def record(filename):
     record_cmd = "arecord -D plughw:1 --duration=10 -f S16_LE -r16 -vv " + filename
@@ -41,6 +42,34 @@ def textToSpeech(text):
 
     command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"" + text + "\\\"}\"" + " --output hello_world.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
     subprocess.run(command, shell=True)
+
+def button():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(18, GPIO.IN,pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(14, GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
+    count = 1
+
+    sequence = []
+    val1 = GPIO.input(18)
+    val2 = GPIO.input(14)
+    while sequence != [9,1,1]:
+    	if len(sequence) == 3:
+    		sequence = []
+
+    	val1 = GPIO.input(18)
+    	val2 = GPIO.input(14)
+
+    	if not val1:
+    		sequence.append(9)
+    		print(sequence)
+    		val1 = True
+    		time.sleep(0.3)
+    	elif not val2:
+    		sequence.append(1)
+    		print(sequence)
+    		val2 = True
+    		time.sleep(0.3)
 
 
 #displayImg("test.jpg")
