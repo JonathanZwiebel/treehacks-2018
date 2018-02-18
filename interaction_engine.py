@@ -56,7 +56,7 @@ class InteractionEngine():
             if output[3]["identified"]:
                 self.scene = output[3]["next_scene"]
                 self.active_pages = [output[3]["next_scene"]]
-                print(self.next_scene)
+                print(self.scene)
             return output[2]
         else:
             self.output_ready = True
