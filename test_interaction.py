@@ -6,4 +6,4 @@ import sys
 
 st = houndify_interface.BasicInteractionClient("name", 16000)
 st.initialize()
-print(st.transcribe(sys.argv[1], sys.argv[2:]))
+print(st.api_call(sys.argv[1], sys.argv[2:]))

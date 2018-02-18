@@ -70,7 +70,7 @@ class BasicInteractionClient():
             return
         self.status = "Idle"
 
-    def transcribe(self, file_location, pages_to_match):
+    def api_call(self, filepath, pages_to_match):
         transcription_start_time = time.time()
         self.status = "Page Matching Setup"
         self.client.setHoundRequestInfo("StoredGlobalPagesToMatch", pages_to_match)
@@ -78,9 +78,7 @@ class BasicInteractionClient():
 
         self.status = "Audio Setup"
 
-        _AUDIO_FILE = file_location
-
-        audio = wave.open(_AUDIO_FILE)
+        audio = wave.open(filepath)
         if not verify_audio(audio, self.freq):
             self.status = "Failed In Audio Setup"
             return
