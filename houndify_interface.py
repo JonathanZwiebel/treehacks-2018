@@ -26,7 +26,7 @@ def verify_audio(audio, freq):
     return True
 
 
-class SingleTranscriptionListener(hound.HoundListener):
+class BasicInteractionListener(hound.HoundListener):
     def initialize(self):
         self.internal_status = "Not Started"
 
@@ -42,7 +42,7 @@ class SingleTranscriptionListener(hound.HoundListener):
         self.error_message = str(err)
 
 
-class SimpleTranscription():
+class BasicInteractionClient():
     def __init__(self, id, freq):
         self.id = id
         self.status = "Idle"
@@ -63,7 +63,7 @@ class SimpleTranscription():
 
         try:
             self.client.setSampleRate(self.freq)
-            self.listener = SingleTranscriptionListener()
+            self.listener = BasicInteractionListener()
             self.listener.initialize()
         except:
             self.status = "Failed In Client Setup"
