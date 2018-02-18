@@ -89,7 +89,7 @@ def main():
             image = displayImg("image.jpeg")
             engine.load_image(image)
             engine.start()
-            status = "LISTEN_START"
+            status = "TTS_START"
         if status == "LISTEN_START":
             listen_begin_time = time.time()
             record("recording.wav")
