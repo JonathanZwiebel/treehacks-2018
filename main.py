@@ -28,7 +28,7 @@ def displayImg(filename):
     db = client.get_default_database()
     comic_images = db['comic-images']
     image_list = list(comic_images.find())
-    print(image_list)
+    # print(image_list)
 
     # Creates file called 'filename'
     f = open(filename, 'wb')
@@ -83,7 +83,7 @@ def main():
     subprocess.run(toHeadphones, shell=True)
 
     while True:
-        #print(status)
+        print(status)
 
         if status == "LOAD_IMAGE":
             image = displayImg("image.jpeg")
