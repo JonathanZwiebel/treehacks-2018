@@ -32,6 +32,7 @@ class InteractionEngine():
         self.houndify.initialize()
         self.output_ready = True
         self.output_text = START_TEXT
+        print(self.image_type)
         if self.image_type == 1:
             self.active_pages = ["SCENE_FIRE_START"]
             self.scene = "SCENE_FIRE_START"
@@ -53,7 +54,7 @@ class InteractionEngine():
         if output[0]:
             self.output_ready = True
             if output[3]["identified"]:
-                self.next_scene = output[3]["next_scene"]
+                self.scene = output[3]["next_scene"]
                 self.active_pages = [output[3]["next_scene"]]
                 print(self.next_scene)
             return output[2]
