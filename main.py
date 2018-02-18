@@ -83,7 +83,7 @@ def main():
     subprocess.run(toHeadphones, shell=True)
 
     while True:
-        print(status)
+        #print(status)
 
         if status == "LOAD_IMAGE":
             image = displayImg("image.jpeg")
