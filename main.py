@@ -75,7 +75,6 @@ def button():
 
 def main():
     engine = interaction_engine.InteractionEngine()
-    engine.start()
     status = "LOAD_IMAGE"
     last_result = "Nine One One Operator. What is your emergency?"
 
@@ -88,6 +87,7 @@ def main():
         if status == "LOAD_IMAGE":
             image = displayImg("image.jpeg")
             engine.load_image(image)
+            engine.start()
             status = "LISTEN_START"
         if status == "LISTEN_START":
             listen_begin_time = time.time()
