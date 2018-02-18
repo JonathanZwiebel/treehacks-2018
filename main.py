@@ -7,11 +7,6 @@ from urllib import request
 import RPi.GPIO as GPIO
 import time
 
-def main():
-    print('hello world')
-
-if __name__ == "__main__":
-    main()
 
 def record(filename):
     record_cmd = "arecord -D plughw:1 --duration=10 -f S16_LE -r16 -vv " + filename
@@ -40,7 +35,7 @@ def textToSpeech(text):
     username = '5cc5826f-36d2-480e-854f-00897a72e4ac'
     password = 'lMrLyiF0o1bW'
 
-    command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"" + text + "\\\"}\"" + " --output hello_world.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
+    command = "curl -X POST -u " + username + ":" + password + " --header \"Content-Type: application/json\"" +  " --header \"Accept: audio/wav\"" + " --data \"{\\\"text\\\":\\\"" + text + "\\\"}\"" + " --output output.wav " + "\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize\""
     subprocess.run(command, shell=True)
 
 def button():
@@ -71,5 +66,10 @@ def button():
     		val2 = True
     		time.sleep(0.3)
 
+def main():
+    print('hello world')
+    textToSpeech("Hey Iris")
 
+if __name__ == "__main__":
+    main()
 #displayImg("test.jpg")
