@@ -8,7 +8,7 @@ import wave
 import time
 
 ID_KEY_FILE = "keys.txt"
-BUFFER_SIZE = 128
+BUFFER_SIZE = 512
 LEGAL_SAMPLE_WIDTHS = [2]
 LEGAL_N_CHANNELS = [1]
 
@@ -65,14 +65,17 @@ class SimpleTranscription():
             self.client.setSampleRate(self.freq)
             self.listener = SingleTranscriptionListener()
             self.listener.initialize()
-            self.client.start(self.listener)
         except:
             self.status = "Failed In Client Setup"
             return
         self.status = "Idle"
 
-    def transcribe(self, file_location, timeout):
+    def transcribe(self, file_location, pages_to_match):
         transcription_start_time = time.time()
+        self.status = "Page Matching Setup"
+        self.client.setHoundRequestInfo("StoredGlobalPagesToMatch", pages_to_match)
+        self.client.start(self.listener)
+
         self.status = "Audio Setup"
 
         _AUDIO_FILE = file_location
@@ -85,10 +88,6 @@ class SimpleTranscription():
         self.status = "Transcribe"
 
         while True:
-            if(time.time() - transcription_start_time > timeout):
-                self.status = "Timeout in Transcription"
-                print("Timeout")
-                break
             samples = audio.readframes(BUFFER_SIZE)
             if len(samples) == 0:
                 break
@@ -96,9 +95,16 @@ class SimpleTranscription():
                 break
 
         result = self.client.finish()
-        transcription = result["AllResults"][0]["RawTranscription"]
+
+        transcription = result["Disambiguation"]["ChoiceData"][0]["Transcription"]
 
         transcription_end_time = time.time()
         transcription_duration = transcription_end_time - transcription_start_time
         self.status = "Idle"
-        return transcription, transcription_duration
+
+        if len(result["DomainUsage"]) == 0:
+            return False, transcription, transcription_duration
+        else:
+            spoken_response = result["AllResults"][0]["SpokenResponse"]
+            results = result["AllResults"][0]["Result"]
+        return True, transcription, spoken_response, results, transcription_duration
