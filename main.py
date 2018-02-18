@@ -28,6 +28,7 @@ def displayImg(filename):
     db = client.get_default_database()
     comic_images = db['comic-images']
     image_list = comic_images.find()
+    print(image_list)
 
     # Creates file called 'filename'
     f = open(filename, 'wb')
